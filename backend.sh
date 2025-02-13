@@ -46,7 +46,7 @@ validate $? "Disabling Existing Nodejs "
 dnf module enable nodejs:20 -y &>>$LOG_FILE_NAME
 validate $? " Enabling nodejs:20 " 
 
-dnf dnf install nodejs -y &>>$LOG_FILE_NAME
+dnf install nodejs -y &>>$LOG_FILE_NAME
 validate $? "Installing nodejs" 
 
 useradd expense  &>>$LOG_FILE_NAME
