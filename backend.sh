@@ -67,7 +67,7 @@ validate $? "Unzippingthe backend file "
 npm install  &>>$LOG_FILE_NAME
 validate $? "Installing Denpencies" 
 
-cp /Users/srishiva/Documents/test/expenseshell/backend.service  /etc/systemd/system/backend.service
+cp /home/ec2-user/expenseshell/backend.service  /etc/systemd/system/backend.service
 
 
 # prepare MySQL Schema
