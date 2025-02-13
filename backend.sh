@@ -39,25 +39,50 @@ echo "script started executing at : $TIMESTAMP" &>>$LOG_FILE_NAME
 
 CHECK_ROOT
 
-dnf install mysql-server -y &>>$LOG_FILE_NAME
-validate $? "Installing MySql Server"
 
-systemctl enable mysqld &>>$LOG_FILE_NAME
-validate $? "Enabling MySql Server" 
+dnf module disable nodejs -y &>>$LOG_FILE_NAME
+validate $? "Disabling Existing Nodejs "
 
-systemctl start mysqld  &>>$LOG_FILE_NAME
-validate $? "Starting MySql Server"
+dnf module enable nodejs:20 -y &>>$LOG_FILE_NAME
+validate $? " Enabling nodejs:20 " 
 
-mysql -h mysql.hungerhippo.store -u root -pExpenseApp@1 -e 'show databases;' &>>$LOG_FILE_NAME
+dnf dnf install nodejs -y &>>$LOG_FILE_NAME
+validate $? "Installing nodejs" 
 
-if [$? ne 0]
-then 
-   echo "MySQL Root Password not setup" &>>$LOG_FILE_NAME
-   mysql_secure_installation --set-root-pass ExpenseApp@1
-   validate $? "Setting Root Password"
+useradd expense  &>>$LOG_FILE_NAME
+validate $? " Adding expenss user" 
 
-   else 
+mkdir /app  &>>$LOG_FILE_NAME
+validate $? "Creating app directory"
 
-   echo -e "MySQL Root Password Already Setup... $Y Skipping $N"
+curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip &>>$LOG_FILE_NAME
+validate $? "Downloading Backend"
 
- fi   
+cd /app
+
+
+unzip /tmp/backend.zip  &>>$LOG_FILE_NAME
+validate $? "Unzippingthe backend file " 
+
+npm install  &>>$LOG_FILE_NAME
+validate $? "Installing Denpencies" 
+
+cp /Users/srishiva/Documents/test/expenseshell/backend.service  /etc/systemd/system/backend.service
+
+
+# prepare MySQL Schema
+
+dnf install mysql -y &>>$LOG_FILE_NAME
+validate $? "Installing MySQL Client"
+
+mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pExpenseApp@1 < /app/schema/backend.sql  &>>$LOG_FILE_NAME
+validate $? "Setting up the transactions schema and table"
+
+systemctl daemon-reload  &>>$LOG_FILE_NAME
+validate $? "Daemon Reload"
+
+systemctl enable backend  &>>$LOG_FILE_NAME
+validate $? "Enabling backend"
+
+systemctl start backend  &>>$LOG_FILE_NAME
+validate $? "Starting Backend"
