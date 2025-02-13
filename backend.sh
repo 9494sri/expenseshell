@@ -82,7 +82,7 @@ cp /home/ec2-user/expenseshell/backend.service  /etc/systemd/system/backend.serv
 dnf install mysql -y &>>$LOG_FILE_NAME
 validate $? "Installing MySQL Client"
 
-mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pExpenseApp@1 < /app/schema/backend.sql  &>>$LOG_FILE_NAME
+mysql -h <mysql.hungerhippo.store> -uroot -pExpenseApp@1 < /app/schema/backend.sql  &>>$LOG_FILE_NAME
 validate $? "Setting up the transactions schema and table"
 
 systemctl daemon-reload  &>>$LOG_FILE_NAME
