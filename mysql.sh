@@ -48,6 +48,15 @@ validate $? "Enabling MySql Server"
 systemctl start mysqld  &>>$LOG_FILE_NAME
 validate $? "Starting MySql Server"
 
-mysql_secure_installation --set-root-pass ExpenseApp@1
-validate $? "Setting Root Password"
+mysql -h mysql.hungerhippo.store -u root -pExpenseApp@1 -e 'show databases;' &>>$LOG_FILE_NAME
+if [$? ne 0]
+then 
+   echo "MySQL Root Password not setup" &>>$LOG_FILE_NAME
+   mysql_secure_installation --set-root-pass ExpenseApp@1
+   validate $? "Setting Root Password"
 
+   else 
+
+   echo -e "MySQL Root Password Already Setup... $Y Skipping $N"
+
+ fi   
