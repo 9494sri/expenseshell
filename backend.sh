@@ -59,14 +59,14 @@ then
        echo -e "User Already added to expense... $Y Skipping $N"
   fi 
 
-mkdir /app  &>>$LOG_FILE_NAME
+mkdir -p /app  &>>$LOG_FILE_NAME
 validate $? "Creating app directory"
 
 curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip &>>$LOG_FILE_NAME
 validate $? "Downloading Backend"
 
 cd /app
-
+rm -rf /app/*
 
 unzip /tmp/backend.zip  &>>$LOG_FILE_NAME
 validate $? "Unzippingthe backend file " 
@@ -91,5 +91,5 @@ validate $? "Daemon Reload"
 systemctl enable backend  &>>$LOG_FILE_NAME
 validate $? "Enabling backend"
 
-systemctl start backend  &>>$LOG_FILE_NAME
+systemctl restart backend  &>>$LOG_FILE_NAME
 validate $? "Starting Backend"
