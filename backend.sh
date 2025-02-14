@@ -50,7 +50,7 @@ dnf install nodejs -y &>>$LOG_FILE_NAME
 validate $? "Installing nodejs" 
 
 id expense &>>$LOG_FILE_NAME
-if [ $? -ne 0] 
+if [ $? -ne 0 ] 
 then
     useradd expense  &>>$LOG_FILE_NAME
     validate $? " Adding expenss user" 
